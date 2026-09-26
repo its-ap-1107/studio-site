@@ -1,0 +1,16 @@
+# Source images. assets/ holds the web copies that actually ship;
+# uploads/ is the untouched originals — keep them locally, out of the repo.
+uploads/
+
+# editors
+.idea/
+.vscode/
+*.swp
+
+# os
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# logs
+*.log

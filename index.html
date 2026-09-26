@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Studio Name — Architecture, Development, Plotting &amp; Real Estate</title>
+<meta name="description" content="Architecture, development, plotting and real estate. From vision to reality.">
+<meta name="theme-color" content="#F5F4F0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/sections.css">
+</head>
+<body>
+
+<div id="curtain" aria-hidden="true"></div>
+
+<!-- ═════════════════════════════ NAVIGATION ═════════════════════════════ -->
+<header class="nav over-dark" id="nav">
+  <a href="#top" class="logo" aria-label="Studio Name, back to top">
+    <span class="logo-mark" aria-hidden="true"></span>Studio Name
+  </a>
+  <nav class="nav-links" aria-label="Primary">
+    <a href="#projects">Projects</a>
+    <a href="#what-we-do">What We Do</a>
+    <a href="#about">About</a>
+    <a href="#contact" class="btn btn-ghost">Let's Talk <span class="arr">↗</span></a>
+  </nav>
+  <button class="menu-btn" id="navToggle" aria-label="Menu" aria-expanded="false">
+    <span></span><span></span>
+  </button>
+</header>
+
+<div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+  <a href="#projects">Projects</a>
+  <a href="#what-we-do">What We Do</a>
+  <a href="#about">About</a>
+  <a href="#contact" class="btn btn-solid">Let's Talk <span class="arr">↗</span></a>
+</div>
+
+<main id="top">
+
+<!-- ═══════════════════ 1. THE RESIDENCE — PINNED STAGE ═══════════════════ -->
+<section id="stageWrap" aria-label="Residence No. 07, from complete building to exploded composition and back">
+  <div id="stage" class="on-dark">
+
+    <canvas id="sequence" aria-hidden="true"></canvas>
+    <p class="visually-hidden">
+      A scroll-controlled architectural sequence of Residence No. 07, moving from
+      the complete residence through a separated architectural composition and back again.
+    </p>
+
+    <div class="studio-key" aria-hidden="true"></div>
+    <div class="dof" aria-hidden="true"></div>
+    <div class="vignette" aria-hidden="true"></div>
+
+    <!-- ───────────── scroll-synchronised typography ───────────── -->
+    <div id="captions">
+
+      <!-- 0 – 15%  HERO -->
+      <article class="cap cap--hero" data-in="0.00" data-out="0.155">
+        <span class="label">Architecture · Development · Plotting · Real Estate</span>
+        <h1 class="h-display"><span>Every space</span><span>begins with</span><span>an idea.</span></h1>
+        <p class="lede">A contemporary residence shaped by light, proportion and material.</p>
+      </article>
+
+      <!-- 15 – 35%  ARCHITECTURAL REVEAL -->
+      <article class="cap cap--left" data-in="0.175" data-out="0.345">
+        <div class="step label"><b>01</b><em></em>05</div>
+        <h2>Designed<br>around light.</h2>
+        <p>Deep overhangs, expansive glazing and layered volumes create a residence
+          that changes character throughout the day.</p>
+      </article>
+
+      <!-- 35 – 66%  LAYER SEPARATION -->
+      <article class="cap cap--right" data-in="0.385" data-out="0.585">
+        <div class="step label"><b>02</b><em></em>05</div>
+        <h2>Every layer<br>has a purpose.</h2>
+        <p>Structure, enclosure, light and landscape come together as one
+          continuous architectural composition.</p>
+      </article>
+
+      <!-- 66 – 72%  EXPLODED COMPOSITION -->
+      <article class="cap cap--left" data-in="0.615" data-out="0.695">
+        <div class="step label"><b>03</b><em></em>05</div>
+        <h2>Form follows<br>experience.</h2>
+        <p>Every volume, opening and overhang is composed to balance privacy,
+          openness and natural light.</p>
+      </article>
+
+      <!-- 72 – 80%  MATERIAL & DETAIL -->
+      <article class="cap cap--right" data-in="0.715" data-out="0.795">
+        <div class="step label"><b>04</b><em></em>05</div>
+        <h2>Material creates<br>the atmosphere.</h2>
+        <p>Warm timber tones soften the geometry, while stone-like textures, dark
+          architectural volumes and expansive glazing establish a restrained
+          contemporary character.</p>
+      </article>
+
+      <!-- 80 – 84%  SPATIAL REVEAL -->
+      <article class="cap cap--left" data-in="0.804" data-out="0.844">
+        <div class="step label"><b>05</b><em></em>05</div>
+        <h2>Spaces shaped<br>by light.</h2>
+        <p>Large openings blur the boundary between the residence and its landscape,
+          bringing daylight deep into the living experience.</p>
+      </article>
+
+      <!-- 96 – 100%  FINAL -->
+      <article class="cap cap--hero cap--final" data-in="0.955" data-out="1.001">
+        <h2 class="h-display"><span>From vision</span><span class="soft">to reality.</span></h2>
+        <div class="cta-actions">
+          <a href="#what-we-do" class="btn btn-solid down">Explore our work <span class="arr">↓</span></a>
+          <a href="#projects" class="btn btn-ghost">View projects</a>
+        </div>
+      </article>
+
+      <!-- material annotations, tied to the detail camera moves -->
+      <div class="annot" data-in="0.722" data-out="0.742"><span>01</span> Warm timber cladding</div>
+      <div class="annot" data-in="0.742" data-out="0.762"><span>02</span> Textured plaster</div>
+      <div class="annot" data-in="0.762" data-out="0.778"><span>03</span> Black-framed glazing</div>
+      <div class="annot" data-in="0.778" data-out="0.800"><span>04</span> Linear architectural light</div>
+    </div>
+
+    <!-- ───────────── stage rail ───────────── -->
+    <nav class="rail-nav" id="railNav" aria-label="Sequence stages">
+      <button data-goto="0.02"><span>Residence</span><i></i></button>
+      <button data-goto="0.175"><span>Reveal</span><i></i></button>
+      <button data-goto="0.360"><span>Separation</span><i></i></button>
+      <button data-goto="0.670"><span>Exploded</span><i></i></button>
+      <button data-goto="0.740"><span>Material</span><i></i></button>
+      <button data-goto="0.810"><span>Space</span><i></i></button>
+      <button data-goto="0.880"><span>Recompose</span><i></i></button>
+      <button data-goto="0.980"><span>Complete</span><i></i></button>
+    </nav>
+
+    <div id="readout" aria-hidden="true">
+      <span id="readoutPhase">Complete residence</span>
+      <span id="readoutTrack"><i id="readoutFill"></i></span>
+      <span id="readoutPct">00</span>
+    </div>
+
+    <div class="scroll-cue label" id="scrollHint">Scroll to explore ↓<i></i></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════ 2. WHAT WE DO ═══════════════════════════ -->
+<section class="block" id="what-we-do">
+  <div class="sec-head">
+    <h2 class="h-section reveal"><span>One vision.</span><span>Multiple possibilities.</span></h2>
+    <span class="label reveal">What we do</span>
+  </div>
+  <div class="services">
+    <a href="#contact" class="service reveal" data-interest="Architecture">
+      <span class="num">01</span><h3>Architecture</h3>
+      <p>Designing thoughtful, functional and distinctive spaces.</p>
+      <span class="go" aria-hidden="true">→</span></a>
+    <a href="#contact" class="service reveal" data-interest="Development">
+      <span class="num">02</span><h3>Development</h3>
+      <p>From land and planning to complete property development.</p>
+      <span class="go" aria-hidden="true">→</span></a>
+    <a href="#contact" class="service reveal" data-interest="Plotting">
+      <span class="num">03</span><h3>Plotting</h3>
+      <p>Planned land developments designed for future growth.</p>
+      <span class="go" aria-hidden="true">→</span></a>
+    <a href="#contact" class="service reveal" data-interest="Real Estate">
+      <span class="num">04</span><h3>Real Estate</h3>
+      <p>Connecting people with the right property opportunities.</p>
+      <span class="go" aria-hidden="true">→</span></a>
+  </div>
+</section>
+
+<!-- ═══════════════════════════ 3. PROJECTS ═══════════════════════════ -->
+<section class="block projects" id="projects">
+  <div class="sec-head">
+    <h2 class="h-section reveal"><span>Spaces we have</span><span>brought to life.</span></h2>
+    <span class="label reveal">Featured projects</span>
+  </div>
+
+  <div class="gallery" id="gallery">
+
+    <article class="project">
+      <a href="#stageWrap" data-goto="0.00" class="img" aria-label="View Residence No. 07" draggable="false">
+        <img src="assets/05-reassembled.jpg" alt="Residence No. 07, a two-storey contemporary residence at night"
+             width="1376" height="768" loading="lazy" decoding="async" draggable="false">
+      </a>
+      <div class="meta">
+        <span class="label">Project 01</span>
+        <div><h3>Residence No. 07</h3><div class="where">Residential, Maharashtra</div></div>
+        <a href="#stageWrap" data-goto="0.00" class="view">View project ↗</a>
+      </div>
+    </article>
+
+    <article class="project">
+      <a href="#contact" class="img" aria-label="View The Heights" draggable="false">
+        <svg viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+          <rect width="800" height="500" fill="#CDD1CF"/>
+          <rect y="430" width="800" height="70" fill="#BDB8AD"/>
+          <rect x="120" y="300" width="130" height="130" fill="#DAD5CB"/><rect x="620" y="260" width="110" height="170" fill="#D3CEC3"/>
+          <rect x="300" y="40" width="190" height="390" fill="#E6E2D9"/>
+          <rect x="490" y="70" width="70" height="360" fill="#C9C3B7"/>
+          <g fill="#8F9DA0">
+            <rect x="318" y="62" width="154" height="26"/><rect x="318" y="104" width="154" height="26"/><rect x="318" y="146" width="154" height="26"/><rect x="318" y="188" width="154" height="26"/><rect x="318" y="230" width="154" height="26"/><rect x="318" y="272" width="154" height="26"/><rect x="318" y="314" width="154" height="26"/><rect x="318" y="356" width="154" height="26"/>
+          </g>
+          <g fill="#D6D0C4"><rect x="296" y="88" width="120" height="8"/><rect x="296" y="172" width="120" height="8"/><rect x="296" y="256" width="120" height="8"/><rect x="296" y="340" width="120" height="8"/></g>
+        </svg>
+      </a>
+      <div class="meta">
+        <span class="label">Project 02</span>
+        <div><h3>The Heights</h3><div class="where">Residential, Nashik, Maharashtra</div></div>
+        <a href="#contact" class="view">View project ↗</a>
+      </div>
+    </article>
+
+    <article class="project">
+      <a href="#contact" class="img" aria-label="View Greenfields" draggable="false">
+        <svg viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+          <rect width="800" height="500" fill="#D2D4C6"/>
+          <g transform="translate(400 250) scale(1 .55) rotate(-30)">
+            <rect x="-460" y="-460" width="920" height="920" fill="#C6CAB6"/>
+            <rect x="-460" y="-30" width="920" height="60" fill="#E4E0D6"/>
+            <rect x="-30" y="-460" width="60" height="920" fill="#E4E0D6"/>
+            <g fill="none" stroke="#F2F0EA" stroke-width="4">
+              <rect x="-330" y="-330" width="140" height="140"/><rect x="-180" y="-330" width="140" height="140"/><rect x="40" y="-330" width="140" height="140"/><rect x="190" y="-330" width="140" height="140"/>
+              <rect x="-330" y="40" width="140" height="140"/><rect x="-180" y="40" width="140" height="140"/><rect x="40" y="40" width="140" height="140"/><rect x="190" y="40" width="140" height="140"/>
+              <rect x="-330" y="190" width="140" height="140"/><rect x="190" y="190" width="140" height="140"/>
+            </g>
+            <rect x="40" y="40" width="140" height="140" fill="#4F6B63" fill-opacity=".35"/>
+          </g>
+        </svg>
+      </a>
+      <div class="meta">
+        <span class="label">Project 03</span>
+        <div><h3>Greenfields</h3><div class="where">Plotting, Maharashtra</div></div>
+        <a href="#contact" class="view">View project ↗</a>
+      </div>
+    </article>
+
+    <article class="project">
+      <a href="#contact" class="img" aria-label="View The Avenue" draggable="false">
+        <svg viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+          <rect width="800" height="500" fill="#2A2B29"/>
+          <rect y="410" width="800" height="90" fill="#1E1F1D"/>
+          <rect x="110" y="110" width="580" height="300" fill="#3A3B37"/>
+          <g fill="#6E7A7A"><rect x="140" y="140" width="520" height="70"/><rect x="140" y="230" width="520" height="70"/></g>
+          <rect x="140" y="320" width="520" height="90" fill="#C9B48E" fill-opacity=".75"/>
+          <g stroke="#3A3B37" stroke-width="5"><line x1="270" y1="140" x2="270" y2="410"/><line x1="400" y1="140" x2="400" y2="410"/><line x1="530" y1="140" x2="530" y2="410"/></g>
+          <rect x="110" y="96" width="580" height="14" fill="#4A4B46"/>
+        </svg>
+      </a>
+      <div class="meta">
+        <span class="label">Project 04</span>
+        <div><h3>The Avenue</h3><div class="where">Commercial, Maharashtra</div></div>
+        <a href="#contact" class="view">View project ↗</a>
+      </div>
+    </article>
+  </div>
+
+  <div class="gallery-foot">
+    <a href="#contact" class="btn btn-ghost">View all projects <span class="arr">→</span></a>
+    <div class="g-track" aria-hidden="true"><div class="g-thumb" id="gThumb"></div></div>
+    <div class="g-ctrl">
+      <button id="gPrev" aria-label="Previous project">←</button>
+      <button id="gNext" aria-label="Next project">→</button>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════ 4. ABOUT ═══════════════════════════ -->
+<div class="about-wrap">
+  <section class="about" id="about">
+    <h2 class="h-section reveal">
+      <span>We don't just</span><span>build structures.</span><span class="gap"></span>
+      <span class="soft">We create places</span><span class="soft">with purpose.</span>
+    </h2>
+    <div class="about-copy reveal">
+      <span class="label">Our approach</span>
+      <p>We bring together architecture, development and real estate to create spaces
+        that are thoughtfully planned, carefully executed and designed for the future.</p>
+      <div class="principles">
+        <div><small>01</small>Design</div>
+        <div><small>02</small>Precision</div>
+        <div><small>03</small>Quality</div>
+        <div><small>04</small>Purpose</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ═════════════════ 5. NUMBERS + 6. FINAL CTA (dark chapter) ═════════════════ -->
+<div class="dark on-dark" id="darkChapter">
+  <section class="block" id="numbers" aria-label="By the numbers">
+    <div class="sec-head">
+      <h2 class="h-section reveal"><span>By the numbers.</span></h2>
+    </div>
+    <div class="numbers" id="numbersGrid">
+      <!-- PLACEHOLDER VALUES — replace with verified figures before launch -->
+      <div class="stat"><div class="val" data-count="15" data-suffix="+">0</div><span class="label">Years</span></div>
+      <div class="stat"><div class="val" data-count="50" data-suffix="+">0</div><span class="label">Projects</span></div>
+      <div class="stat"><div class="val" data-count="2" data-suffix="M+">0</div><span class="label">Sq. ft.</span></div>
+      <div class="stat"><div class="val" data-count="1000" data-suffix="+">0</div><span class="label">Clients</span></div>
+    </div>
+  </section>
+
+  <section class="cta" id="cta">
+    <svg class="cta-sil" viewBox="0 0 1100 420" fill="none" stroke="#F5F4F0" stroke-width="1" aria-hidden="true">
+      <line x1="0" y1="419" x2="1100" y2="419" pathLength="1"/>
+      <rect x="420" y="60" width="260" height="359" pathLength="1"/>
+      <polyline points="680,60 780,110 780,419" pathLength="1"/>
+      <path d="M420 110H680M420 160H680M420 210H680M420 260H680M420 310H680M420 360H680" pathLength="1" stroke-opacity=".6"/>
+      <path d="M680 110L780 160M680 160L780 210M680 210L780 260M680 260L780 310M680 310L780 360" pathLength="1" stroke-opacity=".4"/>
+      <path d="M160 419V330H300V419M860 419V300H1000V419" pathLength="1" stroke-opacity=".35"/>
+    </svg>
+    <div class="cta-inner">
+      <h2 class="h-display reveal"><span>Have a vision?</span><span class="soft">Let's build it.</span></h2>
+      <span class="label reveal">Architecture · Development · Plotting · Real Estate</span>
+      <div class="cta-actions reveal">
+        <a href="#contact" class="btn btn-solid">Start a conversation <span class="arr">↗</span></a>
+        <a href="#projects" class="btn btn-ghost">Explore projects</a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ═══════════════════════════ 7. CONTACT ═══════════════════════════ -->
+<section class="block contact" id="contact">
+  <div class="contact-info">
+    <h2 class="h-section reveal">Let's talk.</h2>
+    <div class="info-list reveal">
+      <strong>Studio Name</strong>
+      <a href="tel:+910000000000">+91 XXXXX XXXXX</a>
+      <a href="mailto:hello@company.com">hello@company.com</a>
+      <span class="muted">Office address line, City, Maharashtra</span>
+      <div class="socials"><a href="#">Instagram</a><a href="#">LinkedIn</a></div>
+    </div>
+  </div>
+
+  <form class="form reveal" id="enquiryForm" novalidate>
+    <div class="field"><input id="fName" name="name" type="text" placeholder=" " autocomplete="name" required><label for="fName">Name</label></div>
+    <div class="field"><input id="fPhone" name="phone" type="tel" placeholder=" " autocomplete="tel" required><label for="fPhone">Phone</label></div>
+    <div class="field"><input id="fEmail" name="email" type="email" placeholder=" " autocomplete="email"><label for="fEmail">Email</label></div>
+    <div class="field has-select">
+      <select id="fInterest" name="interest">
+        <option>Architecture</option><option>Development</option><option>Plotting</option><option>Real Estate</option>
+      </select>
+      <label for="fInterest">Interest</label>
+    </div>
+    <div class="field full"><textarea id="fMsg" name="message" placeholder=" " rows="3"></textarea><label for="fMsg">Message</label></div>
+    <div class="form-foot">
+      <small>We usually reply within one working day.</small>
+      <button type="submit" class="btn btn-solid">Send enquiry <span class="arr">→</span></button>
+    </div>
+    <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+  </form>
+</section>
+
+</main>
+
+<footer>
+  <span>© <span id="year">2026</span> Studio Name</span>
+  <nav aria-label="Legal"><a href="#">Privacy Policy</a><a href="#">Terms</a><a href="#">RERA Disclosures</a></nav>
+</footer>
+
+<script src="js/timeline.js"></script>
+<script src="js/scene.js"></script>
+<script src="js/sequence.js"></script>
+<script src="js/main.js"></script>
+<script src="js/site.js"></script>
+</body>
+</html>
