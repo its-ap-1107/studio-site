@@ -80,23 +80,28 @@
      unlike the previous building, this explosion throws parts outward in
      every direction, so horizontal band cuts would shear it.
 
-     k    — scale trim; at or above 1.00, or the render stops covering
-     u, v — where the building sits in that render (0–1, image space)
+     k     — scale trim; at or above 1.00, or the render stops covering
+     u, v  — where the building sits in that render (0–1, image space)
+     order — how far apart this state is, 0 complete to 5 fully exploded.
+             sequence.js reads it to know which way the parts are travelling
+             through a dissolve, so the outgoing render keeps moving in that
+             direction while the incoming one arrives from where the outgoing
+             one had them.
      top, bottom — edge colours, used to extend the backdrop on narrow
                    screens where the render is fitted rather than cropped
      ═══════════════════════════════════════════════════════════════════════ */
   const FRAMES = {
-    hero:       { src: 'assets/01-hero.jpg',       k: 1.04, u: 0.470, v: 0.462,
+    hero:       { order: 0, src: 'assets/01-hero.jpg',       k: 1.04, u: 0.470, v: 0.462,
                   top: '#5E7DAC', bottom: '#533223' },
-    detaching:  { src: 'assets/02-detaching.jpg',  k: 1.04, u: 0.470, v: 0.462,
+    detaching:  { order: 1, src: 'assets/02-detaching.jpg',  k: 1.04, u: 0.470, v: 0.462,
                   top: '#6A87C1', bottom: '#8B7367' },
-    separating: { src: 'assets/03-separating.jpg', k: 1.02, u: 0.487, v: 0.474,
+    separating: { order: 2, src: 'assets/03-separating.jpg', k: 1.02, u: 0.487, v: 0.474,
                   top: '#2C2C34', bottom: '#463B37' },
-    apart:      { src: 'assets/04-apart.jpg',      k: 1.00, u: 0.486, v: 0.476,
+    apart:      { order: 3, src: 'assets/04-apart.jpg',      k: 1.00, u: 0.486, v: 0.476,
                   top: '#1E1F23', bottom: '#272121' },
-    opening:    { src: 'assets/05-opening.jpg',    k: 1.00, u: 0.484, v: 0.478,
+    opening:    { order: 4, src: 'assets/05-opening.jpg',    k: 1.00, u: 0.484, v: 0.478,
                   top: '#17181C', bottom: '#322A27' },
-    exploded:   { src: 'assets/06-exploded.jpg',   k: 1.00, u: 0.483, v: 0.478,
+    exploded:   { order: 5, src: 'assets/06-exploded.jpg',   k: 1.00, u: 0.483, v: 0.478,
                   top: '#111214', bottom: '#271F1C' }
   };
 

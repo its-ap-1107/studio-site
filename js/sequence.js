@@ -27,8 +27,20 @@
     dpr: 1,
     contain: false,      /* true when the stage fits rather than crops */
     grads: {},           /* key → cached backdrop gradient */
+    trail: null,         /* half-res copy of the last frame, for motion blur */
+    tctx: null,
+    hasTrail: false,
+    lastP: null,
     last: ''
   };
+
+  /* How far a render keeps travelling through a dissolve, as a fraction of
+     its size. The explosion is radial, so scaling about the building's centre
+     is a fair approximation of the parts' actual movement — which means the
+     outgoing render can carry on outward while the incoming one arrives from
+     where the outgoing one had things. Without this the two simply cross-fade,
+     and a cross-fade reads as a double exposure, not as motion. */
+  const DRIFT = 0.085;
 
   /* ── loading ──────────────────────────────────────────────────────────
      Only what the sequence actually shows. FRAMES may describe renders that
@@ -66,6 +78,16 @@
     /* the widest render is 2:1. Below that the stage would crop into the
        exploded model, so it fits the render and extends the backdrop */
     SEQ.contain = (w / h) < 1.45;
+
+    /* the motion-blur buffer is half resolution: four times cheaper to blit,
+       and the softness from scaling it back up is exactly what is wanted */
+    if (!SEQ.trail) {
+      SEQ.trail = document.createElement('canvas');
+      SEQ.tctx = SEQ.trail.getContext('2d', { alpha: false });
+    }
+    SEQ.trail.width  = Math.max(1, SEQ.canvas.width  >> 1);
+    SEQ.trail.height = Math.max(1, SEQ.canvas.height >> 1);
+    SEQ.hasTrail = false;
 
     if (SEQ.ctx) {
       SEQ.ctx.imageSmoothingQuality = 'high';
@@ -111,10 +133,10 @@
     return { x: dx, y: dy, w: w, h: h };
   }
 
-  function drawFrame(key, zoom, tu, tv) {
+  function drawFrame(key, zoom, tu, tv, bias) {
     const rec = SEQ.images[key];
     if (!rec || !rec.ok) return;
-    const r = place(rec.img, TLx.FRAMES[key], zoom, tu, tv);
+    const r = place(rec.img, TLx.FRAMES[key], zoom * (bias || 1), tu, tv);
     SEQ.ctx.drawImage(rec.img, r.x, r.y, r.w, r.h);
   }
 
@@ -130,11 +152,17 @@
     const tv = C.tv(p);
     const f = TLx.frameAt(p);
 
-    /* skip the draw when nothing visible has changed */
+    /* how fast the visitor is moving, in progress per frame */
+    const vel = SEQ.lastP === null ? 0 : Math.abs(p - SEQ.lastP);
+    SEQ.lastP = p;
+    const smear = SEQ.reduced ? 0 : Math.min(0.5, vel * 55);
+
+    /* skip the draw when nothing visible has changed — but keep drawing while
+       a motion trail is still decaying, or it would freeze mid-smear */
     const sig = f.a + '|' + f.b + '|' + f.t.toFixed(3) + '|' +
                 zoom.toFixed(4) + '|' + tu.toFixed(4) + '|' + tv.toFixed(4) +
                 '|' + SEQ.canvas.width;
-    if (sig === SEQ.last) return;
+    if (sig === SEQ.last && smear < 0.02 && !SEQ.hasTrail) return;
     SEQ.last = sig;
 
     const ctx = SEQ.ctx;
@@ -152,12 +180,35 @@
       ctx.globalAlpha = 1;
     }
 
-    drawFrame(f.a, zoom, tu, tv);
+    /* the parts are travelling one way or the other; both renders move with
+       them so the swap happens underneath a continuous motion */
+    let biasA = 1, biasB = 1;
+    if (f.t > 0.001 && f.b !== f.a) {
+      const A = TLx.FRAMES[f.a], B = TLx.FRAMES[f.b];
+      const dir = Math.sign((B.order || 0) - (A.order || 0)) * DRIFT;
+      biasA = 1 + dir * f.t;
+      biasB = 1 - dir * (1 - f.t);
+    }
+
+    drawFrame(f.a, zoom, tu, tv, biasA);
 
     if (f.t > 0.001 && f.b !== f.a) {
       ctx.globalAlpha = f.t;
-      drawFrame(f.b, zoom, tu, tv);
+      drawFrame(f.b, zoom, tu, tv, biasB);
       ctx.globalAlpha = 1;
+    }
+
+    /* motion blur, proportional to scroll speed: fast scrubbing smears into
+       the previous frame instead of flickering between two of them */
+    if (smear > 0.02 && SEQ.hasTrail) {
+      ctx.globalAlpha = smear;
+      ctx.drawImage(SEQ.trail, 0, 0, SEQ.trail.width, SEQ.trail.height, 0, 0, cw, ch);
+      ctx.globalAlpha = 1;
+    }
+    if (smear > 0.02 || SEQ.hasTrail) {
+      SEQ.tctx.drawImage(SEQ.canvas, 0, 0, cw, ch,
+                         0, 0, SEQ.trail.width, SEQ.trail.height);
+      SEQ.hasTrail = smear > 0.02;
     }
   }
 
@@ -168,6 +219,7 @@
     const stage = document.getElementById('stage');
     SEQ.canvas = document.getElementById('sequence');
     SEQ.ctx = SEQ.canvas.getContext('2d', { alpha: false });
+    SEQ.reduced = global.matchMedia('(prefers-reduced-motion: reduce)').matches;
     resize();
     global.addEventListener('resize', resize, { passive: true });
 
