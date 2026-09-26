@@ -5,18 +5,28 @@ editorial sections below it carry the rest. No build step, no dependencies, no
 framework. Open `index.html`.
 
 ```
-frontend/
-  index.html          structure + all copy
-  css/base.css        tokens, typography, chrome, and the pinned stage
-  css/sections.css    what we do · projects · about · numbers · cta · contact
-  js/timeline.js      the stage choreography — every value as f(scroll)
-  js/sequence.js      canvas renderer: the renders + the camera
-  js/scene.js         stage typography, grade, readout, rail
-  js/main.js          scroll loop, in-page navigation
-  js/site.js          menu, reveal, gallery, counters, form
-  assets/             the five renders
-  uploads/            the originals, untouched
+index.html          structure + all copy
+css/base.css        tokens, typography, chrome, and the pinned stage
+css/sections.css    what we do · projects · about · numbers · cta · contact
+js/timeline.js      the stage choreography — every value as f(scroll)
+js/sequence.js      canvas renderer: the renders + the camera
+js/scene.js         stage typography, grade, readout, rail
+js/main.js          scroll loop, in-page navigation
+js/site.js          menu, reveal, gallery, counters, form
+assets/             the five renders that ship
+uploads/            the originals — kept locally, gitignored
+.nojekyll           stops GitHub Pages running the files through Jekyll
 ```
+
+## Deploying
+
+The site is static and sits at the repo root, so GitHub Pages can serve the
+branch directly — no build, no workflow file.
+
+**Settings → Pages → Source → "Deploy from a branch" → `main` → `/ (root)`.**
+
+Every push to `main` republishes. Vercel works too: import the repo, framework
+preset **Other**, leave the build and install commands empty.
 
 ## Page order
 
