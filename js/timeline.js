@@ -1,5 +1,5 @@
 /* ============================================================================
-   SVARA ATELIER — Residence No. 07
+   STUDIO SITE
    timeline.js · deterministic scroll choreography
    ----------------------------------------------------------------------------
    Nothing here autoplays. Every value is a pure function of scroll progress
@@ -47,13 +47,13 @@
      ═══════════════════════════════════════════════════════════════════════ */
   const PHASES = [
     { at: 0.000, label: 'Complete residence' },
-    { at: 0.150, label: 'Architectural reveal' },
+    { at: 0.140, label: 'Architectural reveal' },
     { at: 0.300, label: 'Layer separation' },
-    { at: 0.660, label: 'Exploded composition' },
-    { at: 0.720, label: 'Material & detail' },
-    { at: 0.800, label: 'Spatial reveal' },
-    { at: 0.845, label: 'Recomposition' },
-    { at: 0.960, label: 'Complete residence' }
+    { at: 0.640, label: 'Exploded composition' },
+    { at: 0.700, label: 'Material & detail' },
+    { at: 0.790, label: 'Spatial reveal' },
+    { at: 0.860, label: 'Recomposition' },
+    { at: 0.970, label: 'Complete residence' }
   ];
 
   function phaseAt(p) {
@@ -65,103 +65,63 @@
   /* ══════════════════════════════════════════════════════════════════════
      THE RENDERS
      ═══════════════════════════════════════════════════════════════════════
-     Named for what each one holds, ordered by how far the building has
-     opened — which is not the order the files were produced in. 02 detaches
-     the landscape while the building stays largely intact; 03 opens the
-     upper floor itself. 01, 02 and 05 share the hero's eye-level
-     three-quarter angle, 03 and 04 the elevated frontal one, so the angle
-     rises once on the way in and returns once on the way out.
+     Six states of one residence, ordered by how far it has come apart:
 
-     Only `exploded` is animated. It is cut into horizontal layers (BANDS)
-     that travel, so the disassembly is real motion rather than a dissolve.
-     The other four are camera positions around that animation.
+       01-hero        sunset exterior, complete
+       02-detaching   same camera, same light — panels begin to lift away
+       03-separating  dark studio, the model mildly apart
+       04-apart       further out, facade panels floating
+       05-opening     floor plates separate, the interior is exposed
+       06-exploded    fully apart, structure and landscape ring separated
 
-     k    — scale trim, so the building holds its size across a dissolve
+     03 to 06 share one camera and one lighting setup, so dissolving between
+     them reads as the building continuing to open rather than as a cut. That
+     is the whole reason this works without cutting the image into layers —
+     unlike the previous building, this explosion throws parts outward in
+     every direction, so horizontal band cuts would shear it.
+
+     k    — scale trim; at or above 1.00, or the render stops covering
      u, v — where the building sits in that render (0–1, image space)
+     top, bottom — edge colours, used to extend the backdrop on narrow
+                   screens where the render is fitted rather than cropped
      ═══════════════════════════════════════════════════════════════════════ */
   const FRAMES = {
-    assembled:  { src: 'assets/01-assembled.jpg',   k: 1.02, u: 0.492, v: 0.478 },
-    lifting:    { src: 'assets/02-lifting.jpg',     k: 1.04, u: 0.482, v: 0.470 },
-    separating: { src: 'assets/03-separating.jpg',  k: 1.00, u: 0.480, v: 0.478 },
-    exploded:   { src: 'assets/04-exploded.jpg',    k: 1.02, u: 0.486, v: 0.480, bands: true },
-    reassembled:{ src: 'assets/05-reassembled.jpg', k: 1.06, u: 0.530, v: 0.470 }
+    hero:       { src: 'assets/01-hero.jpg',       k: 1.04, u: 0.470, v: 0.462,
+                  top: '#5E7DAC', bottom: '#533223' },
+    detaching:  { src: 'assets/02-detaching.jpg',  k: 1.04, u: 0.470, v: 0.462,
+                  top: '#6A87C1', bottom: '#8B7367' },
+    separating: { src: 'assets/03-separating.jpg', k: 1.02, u: 0.487, v: 0.474,
+                  top: '#2C2C34', bottom: '#463B37' },
+    apart:      { src: 'assets/04-apart.jpg',      k: 1.00, u: 0.486, v: 0.476,
+                  top: '#1E1F23', bottom: '#272121' },
+    opening:    { src: 'assets/05-opening.jpg',    k: 1.00, u: 0.484, v: 0.478,
+                  top: '#17181C', bottom: '#322A27' },
+    exploded:   { src: 'assets/06-exploded.jpg',   k: 1.00, u: 0.483, v: 0.478,
+                  top: '#111214', bottom: '#271F1C' }
   };
-
-  /* ══════════════════════════════════════════════════════════════════════
-     BANDS — the residence, cut along the gaps the render already contains
-     ═══════════════════════════════════════════════════════════════════════
-     Rows tile the render exactly, so at full separation the reconstruction is
-     the original image, pixel for pixel. Each row travels straight down onto
-     the ground floor to assemble, and straight back up to come apart: no
-     rotation, no spin, no drift.
-
-     y0,y1 — the row, in image space
-     dy    — how far it travels to assemble (image heights, + is down)
-     lead  — where it starts inside the separation, so the roof canopy leaves
-             first and the landscape last, as an architect would present it
-     ═══════════════════════════════════════════════════════════════════════ */
-  const BANDS = [
-    { y0: 0.000, y1: 0.056, dy:  0.210, lead: 0.00 },  /* grey cap slab      */
-    { y0: 0.056, y1: 0.140, dy:  0.180, lead: 0.04 },  /* roof slab          */
-    { y0: 0.140, y1: 0.233, dy:  0.146, lead: 0.08 },  /* slatted soffit     */
-    { y0: 0.233, y1: 0.322, dy:  0.096, lead: 0.13 },  /* linear light + chandelier */
-    { y0: 0.322, y1: 0.540, dy:  0.028, lead: 0.19 },  /* upper floor volume */
-    { y0: 0.540, y1: 0.640, dy:  0.008, lead: 0.25 },  /* balcony + plates   */
-    { y0: 0.640, y1: 0.790, dy:  0.000, lead: 0.00 },  /* ground floor — the anchor */
-    { y0: 0.790, y1: 1.000, dy: -0.034, lead: 0.31 }   /* landscape + paving */
-  ];
-
-  /* how far one row has travelled at separation t — 0 assembled, 1 apart */
-  function bandAmount(band, t) {
-    return Ease.cinema(ramp(t, band.lead, 1));
-  }
-
-  /* Separation never returns fully to 0: the layers in this render are drawn
-     with their own sides showing, so the last of the travel is handed to a
-     dissolve into a real assembled render rather than to a compressed fake.
-
-     The floor is 0.14, where every layer has closed up and the render reads
-     as a complete building — which is what the two assembled renders either
-     side dissolve into and out of. Because both ends of each dissolve show a
-     closed building, the only thing that changes across them is the camera
-     angle, and the entire opening and closing is real motion: 36% of the
-     page taking the layers apart, 9% putting them back.
-
-     Linear, deliberately. The shaping lives in bandAmount, which eases each
-     layer individually; easing here as well would stack two curves and bunch
-     the whole separation into the middle of its scroll. */
-  const explode = Track([
-    [0.000, 0.14, 'linear'], [0.300, 0.14, 'linear'], [0.660, 1.00, 'linear'],
-    [0.845, 1.00, 'linear'], [0.935, 0.14, 'linear'], [1.000, 0.14, 'linear']
-  ]);
 
   /* ══════════════════════════════════════════════════════════════════════
      WHICH RENDER IS ON SCREEN
      ═══════════════════════════════════════════════════════════════════════
      Two entries sharing a source are a hold. Two entries with different
-     sources cross-dissolve across the whole span between them. The angle
-     change of angle is deliberately placed where the building is already
-     opening, so it reads as the camera rising rather than as a cut.
+     sources cross-dissolve across the whole span between them — the opening
+     dissolves run 8–9% of the page each, so the building is visibly, slowly
+     coming apart the entire way down. Recomposition replays them in reverse,
+     a little brisker, as the brief asks.
      ═══════════════════════════════════════════════════════════════════════ */
   const KEYS = [
-    [0.000, 'assembled'], [0.150, 'assembled'],   /* hero, eye-level      */
-    [0.300, 'exploded'],  [0.935, 'exploded'],    /* the animated master   */
-    [1.000, 'reassembled']                        /* hero angle, complete  */
+    [0.000, 'hero'],       [0.140, 'hero'],        /* complete, sunset      */
+    [0.230, 'detaching'],  [0.275, 'detaching'],   /* same camera, lifting  */
+    [0.350, 'separating'], [0.390, 'separating'],  /* into the studio       */
+    [0.455, 'apart'],      [0.490, 'apart'],
+    [0.550, 'opening'],    [0.580, 'opening'],
+    [0.640, 'exploded'],   [0.860, 'exploded'],    /* hold · detail · section */
+    [0.895, 'opening'],
+    [0.922, 'apart'],
+    [0.948, 'separating'],
+    [0.974, 'detaching'],
+    [1.000, 'hero']                                /* complete again        */
   ];
-
-  /* `lifting` and `separating` are deliberately not in the sequence above.
-
-     Both are mid-explosion, so dissolving through them forces the animated
-     master to enter already half open — which hands most of the roof's
-     travel to a dissolve instead of showing it. Worse, neither one's roof
-     height matches the master's at the crossing point, so the roof visibly
-     sinks before it rises. Cutting them makes the opening and closing one
-     continuous move.
-
-     To put one back, insert a hold before `exploded` and raise the floor of
-     `explode` to match how far that render has already opened:
-         [0.220, 'lifting'], [0.260, 'lifting'],
-     with the `exploded` entry near 0.340 and the floor near 0.35.       */
 
   function frameAt(p) {
     if (p <= KEYS[0][0]) return { a: KEYS[0][1], b: KEYS[0][1], t: 0 };
@@ -176,42 +136,42 @@
 
   /* ══════════════════════════════════════════════════════════════════════
      CAMERA — one continuous move, in image space.
-     zoom is a scale above cover-fit; tu/tv name the point held at centre,
-     so every detail pass lands on its subject at any viewport size.
-     The detail targets below are read off 04-exploded.jpg, where the layers
-     are at their native positions.
+     zoom is a scale above the fit; tu/tv name the point held at centre, so
+     each detail pass lands on its subject at any viewport size. The detail
+     targets are read off 06-exploded.jpg.
      ═══════════════════════════════════════════════════════════════════════ */
   const Camera = {
     zoom: Track([
-      [0.000, 1.16], [0.100, 1.22, 'sine'], [0.150, 1.26], [0.230, 1.22],
-      [0.300, 1.18], [0.450, 1.13], [0.660, 1.06],
-      [0.700, 1.12], [0.722, 1.52],
-      [0.742, 1.95],   /* 01 timber       */
-      [0.765, 1.82],   /* 02 plaster      */
-      [0.788, 1.88],   /* 03 glazing      */
-      [0.800, 1.78],   /* 04 linear light */
-      [0.830, 1.66],   /* the interior    */
-      [0.845, 1.36],
-      [0.900, 1.10], [0.935, 1.10], [0.975, 1.16], [1.000, 1.14, 'outSlow']
+      [0.000, 1.18], [0.100, 1.24, 'sine'], [0.140, 1.26], [0.230, 1.20],
+      [0.350, 1.10], [0.455, 1.04], [0.550, 1.01], [0.640, 1.00],
+      [0.700, 1.00],
+      [0.722, 1.85],   /* 01 fluted cladding  */
+      [0.745, 1.80],   /* 02 stone + plaster  */
+      [0.765, 1.85],   /* 03 glazing          */
+      [0.785, 1.70],   /* 04 structure        */
+      [0.805, 1.58],   /* the interior        */
+      [0.845, 1.30],
+      [0.895, 1.05], [0.922, 1.02], [0.948, 1.05],
+      [0.974, 1.12], [1.000, 1.18, 'outSlow']
     ]),
     tu: Track([
-      [0.000, 0.500], [0.300, 0.500], [0.720, 0.500],
-      [0.742, 0.257],   /* the detached timber panel, left  */
-      [0.765, 0.500],   /* textured plaster, main volume    */
-      [0.788, 0.500],   /* black-framed glazing, ground     */
-      [0.800, 0.508],   /* the linear light and chandelier  */
-      [0.830, 0.500],   /* the interior, through the glass  */
+      [0.000, 0.500], [0.300, 0.500], [0.640, 0.500], [0.700, 0.500],
+      [0.722, 0.665],   /* the fluted tower panel, right of centre */
+      [0.745, 0.330],   /* stone piers and plaster, left          */
+      [0.765, 0.470],   /* black-framed glazing and the balcony   */
+      [0.785, 0.455],   /* the column grid under the slabs        */
+      [0.805, 0.450],   /* the lit interior                       */
       [0.845, 0.500], [1.000, 0.500]
     ]),
     tv: Track([
-      [0.000, 0.500], [0.150, 0.486], [0.300, 0.482], [0.660, 0.492],
-      [0.720, 0.492],
-      [0.742, 0.423],
-      [0.765, 0.430],
-      [0.788, 0.690],
-      [0.800, 0.275],
-      [0.830, 0.700],
-      [0.845, 0.560], [0.900, 0.500], [1.000, 0.500]
+      [0.000, 0.500], [0.140, 0.478], [0.300, 0.478], [0.640, 0.500],
+      [0.700, 0.500],
+      [0.722, 0.390],
+      [0.745, 0.420],
+      [0.765, 0.432],
+      [0.785, 0.700],
+      [0.805, 0.588],
+      [0.845, 0.520], [0.922, 0.500], [1.000, 0.500]
     ])
   };
 
@@ -221,15 +181,14 @@
 
   /* depth of field: a hint of a real lens, during the close passes only */
   const dof = Track([
-    [0.000, .10], [0.150, .04], [0.300, 0], [0.700, 0],
-    [0.742, .26], [0.800, .26], [0.830, .16], [0.900, 0], [1.000, .08]
+    [0.000, .10], [0.140, .04], [0.300, 0], [0.700, 0],
+    [0.722, .24], [0.785, .24], [0.805, .16], [0.895, 0], [1.000, .08]
   ]);
 
-  /* a faint cool lift while the layers are apart, so the frontal render sits
-     in the same room as the night renders on either side of it */
+  /* how far into the dark studio we are — drives the key light and grade */
   const studio = Track([
-    [0.000, 0], [0.200, 0], [0.400, .45], [0.660, .70],
-    [0.800, .55], [0.845, .30], [0.935, .05], [1.000, 0]
+    [0.000, 0], [0.230, 0], [0.350, .50], [0.640, .85],
+    [0.785, .70], [0.895, .40], [0.974, .05], [1.000, 0]
   ]);
 
   /* ══════════════════════════════════════════════════════════════════════
@@ -246,7 +205,6 @@
   global.TL = {
     clamp, lerp, ramp, Ease, Track,
     FRAMES, KEYS, frameAt,
-    BANDS, bandAmount, explode,
     Camera, dof, studio,
     phaseAt, captionOpacity, PHASES
   };

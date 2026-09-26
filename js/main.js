@@ -119,7 +119,7 @@
   /* ── keyboard: the presentation should be navigable without a mouse ──── */
   window.addEventListener('keydown', e => {
     if (e.metaKey || e.ctrlKey || e.altKey) return;
-    const marks = [0, 0.175, 0.300, 0.660, 0.722, 0.804, 0.870, 1];
+    const marks = [0, 0.165, 0.350, 0.650, 0.722, 0.800, 0.900, 1];
     if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
       const dir = e.key === 'ArrowRight' ? 1 : -1;
       const p = readTarget();

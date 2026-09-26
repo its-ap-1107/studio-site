@@ -27,41 +27,53 @@ re-points `--ink/--bg/--mute/--line` so components work on either ground.
 ## How the opening sequence works
 
 `#stageWrap` is 470vh with a sticky stage. Scroll maps to one value
-`p ∈ [0,1]`; everything on screen is a pure function of `p`. Nothing
+`p in [0,1]`; everything on screen is a pure function of `p`. Nothing
 autoplays, and scrolling up runs the whole thing backwards.
 
-**The explosion is real motion, not a cross-fade.** `assets/04-exploded.jpg`
-is cut along the dark gaps it already contains — roof cap, roof slab, slatted
-soffit, linear light, upper floor, balcony plates, ground floor, landscape —
-and each layer is drawn separately and travels. Rows tile the image exactly,
-so at full separation every offset is zero and it reconstructs the original
-render pixel for pixel.
+Six renders of one residence, ordered by how far it has come apart:
 
-Renders either side of it (`01-assembled`, `05-reassembled`) cross-dissolve in
-and out **while the layers are fully closed up**, so both halves of every
-dissolve show a complete building. This is deliberate: earlier versions
-dissolved through mid-explosion renders and the roof visibly sank before it
-rose. `02-lifting` and `03-separating` are in `FRAMES` but out of `KEYS` for
-that reason, and are not downloaded.
+| | Render | What it is |
+|---|---|---|
+| 01 | `01-hero` | sunset exterior, complete |
+| 02 | `02-detaching` | same camera and light, panels begin to lift away |
+| 03 | `03-separating` | dark studio, mildly apart |
+| 04 | `04-apart` | facade panels floating out |
+| 05 | `05-opening` | floor plates separate, interior exposed |
+| 06 | `06-exploded` | fully apart, structure and landscape ring separated |
+
+**03 to 06 share one camera and one lighting setup.** That is what makes the
+dissolves between them read as the building continuing to open rather than as
+one picture replacing another, and it is why this does not need the image cut
+into moving layers. The previous building's explosion was vertically layered,
+so band cuts worked; **this one throws parts outward in every direction, and
+horizontal cuts would shear it.** Don't reintroduce the band system here.
+
+The opening dissolves run 8–9% of the page each, so the building is visibly
+coming apart the whole way down. Recomposition replays the same renders in
+reverse, a little brisker, over the last 14%.
+
+`01` and `02` are 3:2; the four studio renders were padded to **2:1** by
+clamping their edge columns outward, so a wide stage crops almost nothing off
+the exploded model. Below a 1.45 viewport aspect the stage fits the render
+instead of cropping and extends the backdrop using each render's sampled
+`top`/`bottom` edge colours, so nothing is ever cut off the sides.
 
 ## Where the numbers live — all in `js/timeline.js`
 
 | Knob | What it controls |
 |---|---|
-| `BANDS` `y0,y1` | where each layer is cut out of the exploded render |
-| `BANDS` `dy` | how far that layer travels to assemble (+ is down) |
-| `BANDS` `lead` | when it starts moving, so the roof leaves first |
-| `explode` | how much scroll the separation and recomposition get |
+| `KEYS` | which render is on screen at which scroll position; two entries sharing a source are a hold, two different ones cross-dissolve across the whole span |
 | `FRAMES` `k` | per-render scale trim — keep at or above `1.00` |
 | `FRAMES` `u,v` | where the building sits in that render (0–1) |
-| `KEYS` | which render is on screen at which scroll position |
-| `Camera.zoom/tu/tv` | the camera, in image space — including the 4 close-ups |
+| `FRAMES` `top,bottom` | edge colours for the narrow-screen backdrop |
+| `Camera.zoom` | scale above the fit |
+| `Camera.tu/tv` | the point held at centre — including the four close-ups, read off `06-exploded.jpg` |
+| `PHASES` | the eight labels and their boundaries |
+| `studio` | how far into the dark studio the grade has gone |
 
-Rows must stay contiguous and end at `1.000`. A `k` below `1.00` stops the
-render covering the stage (`sequence.js` clamps it, but don't rely on that).
-
-**If a layer drags a neighbour with it, the cut is wrong — move `y0`/`y1`,
-not `dy`.**
+Caption windows live in `index.html` as `data-in` / `data-out`, and the stage
+rail's stops are `data-goto` on its buttons. All three sets have to move
+together when the timing changes.
 
 ## Known issue — not yet fixed
 
@@ -72,10 +84,14 @@ quietly paper over it; it needs new renders or a reworked exit.
 
 ## Swapping in a different building
 
-New renders means re-reading every coordinate above off the new images —
-`BANDS` cut lines especially. There's a standing offer to build a tuning
-overlay (draw the cut lines over the render, drag handles, print the `BANDS`
-array) so this stops being guess-edit-reload. Not built yet.
+What matters most is the **source renders**, not the code. The sequence works
+because 03–06 are one camera, one light, progressively more separated. Given
+that, swapping buildings is mostly: drop in the files, re-read `u,v` off each,
+re-aim `Camera.tu/tv` at the new details.
+
+If a new set only has one exploded render, the old band-cutting technique is
+in git history (before this building) — but only use it where the explosion is
+layered vertically.
 
 ## Before this goes live
 

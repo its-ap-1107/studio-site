@@ -65,77 +65,59 @@ and **everything** on screen is a pure function of `p`.
 
 Nothing autoplays. Scroll up and the whole presentation runs backwards.
 
-### The explosion is animated, not cross-faded
+### The sequence
 
-`04-exploded.jpg` is never shown as a picture. It is cut along the gaps the
-render already contains — the dark bands between the roof cap, the roof slab,
-the slatted soffit, the linear light and the floors — and each layer is drawn
-separately, travelling straight down to assemble and straight back up to come
-apart. No rotation, no spin, no drift.
+Six renders of one residence, ordered by how far it has come apart:
 
-The layers are defined in `js/timeline.js` -> `BANDS`:
+| | Render | What it is |
+|---|---|---|
+| 01 | `01-hero` | sunset exterior, complete |
+| 02 | `02-detaching` | same camera and light, panels begin to lift away |
+| 03 | `03-separating` | dark studio, mildly apart |
+| 04 | `04-apart` | facade panels floating out |
+| 05 | `05-opening` | floor plates separate, interior exposed |
+| 06 | `06-exploded` | fully apart, structure and landscape ring separated |
 
-| Layer                     | Image rows    | Travel | Starts at |
-|---------------------------|---------------|--------|-----------|
-| Grey cap slab             | 0.000 – 0.056 | +0.210 | 0.00      |
-| Roof slab                 | 0.056 – 0.140 | +0.180 | 0.04      |
-| Slatted soffit            | 0.140 – 0.233 | +0.146 | 0.08      |
-| Linear light + chandelier | 0.233 – 0.322 | +0.096 | 0.13      |
-| Upper floor volume        | 0.322 – 0.540 | +0.028 | 0.19      |
-| Balcony + floor plates    | 0.540 – 0.640 | +0.008 | 0.25      |
-| Ground floor              | 0.640 – 0.790 |  0     | anchor    |
-| Landscape + paving        | 0.790 – 1.000 | −0.034 | 0.31      |
+**03 to 06 share one camera and one lighting setup.** That is what makes the
+dissolves between them read as the building continuing to open rather than as
+one picture replacing another. The opening dissolves run 8–9 % of the page
+each, so it is visibly coming apart the whole way down; recomposition replays
+them in reverse over the last 14 %.
 
-The rows tile the render exactly, so at full separation every offset is zero
-and the reconstruction is the original image pixel for pixel. Each layer has
-its own start point, so the roof canopy leaves first and the landscape last —
-the order an architect would present it in — and the exact reverse coming back.
-
-About 44 % of the page is layer motion; about 21 % is cross-dissolve.
+About half the page is spent actively moving between states. The rest is
+deliberate holds: the hero at each end, and the exploded model while the
+camera works over its details.
 
 ### The eight phases
 
-| Scroll      | Phase                   | What is on screen                     |
-|-------------|-------------------------|---------------------------------------|
-| 0 – 15 %    | Complete residence      | `01-assembled`, slow push in          |
-| 15 – 30 %   | Architectural reveal    | dissolve into the animated master     |
-| 30 – 66 %   | Layer separation        | the layers travel apart               |
-| 66 – 72 %   | Exploded composition    | held apart                            |
-| 72 – 80 %   | Material & detail       | four close passes                     |
-| 80 – 84 %   | Spatial reveal          | into the ground-floor glazing         |
-| 84 – 93 %   | Recomposition           | the layers travel back                |
-| 93 – 100 %  | Complete residence      | dissolve to `05-reassembled`          |
+| Scroll | Phase | On screen |
+|---|---|---|
+| 0 – 14 % | Complete residence | `01-hero`, slow push in |
+| 14 – 30 % | Architectural reveal | into `02-detaching` |
+| 30 – 64 % | Layer separation | `03` → `04` → `05` → `06` |
+| 64 – 70 % | Exploded composition | held |
+| 70 – 79 % | Material & detail | four close passes |
+| 79 – 86 % | Spatial reveal | into the lit interior |
+| 86 – 97 % | Recomposition | the same renders, reversed |
+| 97 – 100 % | Complete residence | back to `01-hero` |
 
-Both dissolves happen while the layers are fully closed up, so each one runs
-between two complete buildings and only the camera angle changes. The building
-never appears to close before it opens.
+### Framing
 
-### The renders
+`01` and `02` are 3:2. The four studio renders were padded to **2:1** by
+clamping their edge columns outward — a 3:2 render cover-fitted on a 16:9
+stage loses ~18 % of its height, which on the exploded model is exactly where
+the roof slabs and the landscape ring are.
 
-Ordered by how far the building has opened, which is *not* the order the files
-were produced in:
-
-| File                | Angle       | State                                   |
-|---------------------|-------------|-----------------------------------------|
-| `01-assembled`      | eye-level   | complete — the hero                     |
-| `02-lifting`        | eye-level   | landscape detached, building intact     |
-| `03-separating`     | elevated    | upper floor opened up                   |
-| `04-exploded`       | elevated    | fully apart — **the animated master**   |
-| `05-reassembled`    | eye-level   | complete — the close                    |
-
-`02` and `03` are **not in the sequence**, and are not downloaded. Both are
-mid-explosion, so dissolving through them forces the master to enter already
-half open, handing most of the roof's travel to a dissolve instead of showing
-it — and neither one's roof height matches the master's at the crossing point,
-so the roof visibly sinks before it rises. `js/timeline.js` -> `KEYS` carries
-the two-line change to put one back if you want a longer lead-in.
+Below a 1.45 viewport aspect the stage fits the render instead of cropping,
+and fills the space around it with a gradient built from each render's sampled
+`top` / `bottom` edge colours. Both renders in a dissolve always use the same
+mode, so the framing never jumps mid-transition.
 
 ### The camera
 
-One continuous move in image space. `Camera.zoom` is a scale above cover-fit;
+One continuous move in image space. `Camera.zoom` is a scale above the fit;
 `Camera.tu/tv` name the point held at centre, so each detail pass lands on its
-subject at any viewport size. `cover` is enforced as a floor, so a render can
-be cropped but can never letterbox.
+subject at any viewport size.
 
 ## Editing
 
@@ -143,11 +125,9 @@ be cropped but can never letterbox.
 |-------------------------------|--------------------------------------------|
 | Studio / project name         | `index.html` (`.mark-name`, `<title>`)     |
 | All copy                      | `index.html` — captions carry `data-in`/`data-out` |
-| **Where the cuts fall**       | `js/timeline.js` → `BANDS` (`y0`,`y1`)     |
-| **How far a layer travels**   | `js/timeline.js` → `BANDS` (`dy`)          |
-| **The order layers separate** | `js/timeline.js` → `BANDS` (`lead`)        |
-| How long the explosion takes  | `js/timeline.js` → `explode`               |
-| Which render appears when     | `js/timeline.js` → `KEYS`                  |
+| **Which render appears when** | `js/timeline.js` → `KEYS`                  |
+| **How long a dissolve runs**  | the gap between two `KEYS` entries         |
+| **A hold**                    | two `KEYS` entries sharing a source        |
 | Camera moves                  | `js/timeline.js` → `Camera`                |
 | Detail close-ups              | `js/timeline.js` → `Camera.tu` / `Camera.tv` |
 | Phase labels and timings      | `js/timeline.js` → `PHASES`                |
@@ -159,50 +139,28 @@ Caption windows live in the markup, so retiming copy is an HTML edit:
 <article class="cap cap--left" data-in="0.175" data-out="0.345">
 ```
 
-### Tuning the explosion
+### Swapping the building
 
-Everything about the motion lives in `BANDS`. Each row is one layer:
+What matters is the **renders**, not the code. The sequence works because
+03–06 are one camera, one light, progressively more separated. Given that:
 
-```js
-{ y0: 0.056, y1: 0.140, dy: 0.180, lead: 0.04 }   // the roof slab
-```
+1. Drop the files in `assets/`.
+2. Re-read `u,v` off each — where the building's centre sits in that frame,
+   0–1. This is what keeps two renders aligned through a dissolve.
+3. Sample each render's top and bottom edge colours into `top`/`bottom`.
+4. Re-aim `Camera.tu/tv` at the new details.
+5. Pad any render narrower than about 1.8:1 out to 2:1, or the stage will
+   crop into it.
 
-- `y0, y1` — where the layer sits in `04-exploded.jpg`, top to bottom, 0–1.
-  Rows must stay contiguous and end at `1.000`, or the render will not
-  reconstruct exactly at full separation.
-- `dy` — how far it travels to assemble, in image heights. Positive is down.
-  Read it off the render: the distance from where the layer sits to where it
-  belongs on the building.
-- `lead` — where inside the separation this layer starts moving, 0–1. Lower
-  leaves first.
-
-If a layer looks like it takes the wrong piece with it, the cut is in the
-wrong place — adjust `y0`/`y1`, not `dy`.
-
-### Adding a render
-
-Drop it in `assets/`, add an entry to `FRAMES`, and place it in `KEYS`:
-
-```js
-lifting: { src: 'assets/02-lifting.jpg', k: 1.04, u: 0.482, v: 0.470 }
-```
-
-- `k` — scale trim. Keep it at or just above `1.00`; below that the render
-  stops covering the stage.
-- `u, v` — where the building's centre sits in that render, 0–1. This is what
-  aligns it with its neighbours during a dissolve.
-- `bands: true` marks a render as the animated master. Only one should carry
-  it, and `BANDS` must be read off that render.
-
-Renders listed in `FRAMES` but absent from `KEYS` are not downloaded.
+`k` is a scale trim; keep it at or above `1.00` or the render stops covering.
 
 ## Performance
 
-- Three images, ~500 KB, all decoded before the curtain lifts, so the opening
-  frame is never a pop. The two unused renders are never fetched.
-- Eight `drawImage` calls per frame while the layers are moving, one when they
-  are fully apart, and the draw is skipped entirely when nothing visible has
-  changed.
+- Six renders, ~1.8 MB, all decoded before the curtain lifts, so the opening
+  frame is never a pop. Renders listed in `FRAMES` but absent from `KEYS` are
+  never fetched.
+- At most two `drawImage` calls per frame, and the draw is skipped entirely
+  when nothing visible has changed.
 - Canvas backing store capped at 1.75× DPR.
 - One rAF loop that stops itself when the scroll has settled.
 - `prefers-reduced-motion` quantises progress and skips the scroll easing.
