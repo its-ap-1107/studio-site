@@ -162,7 +162,7 @@ body.ready #curtain{opacity:0}
 /* ══════════════════════════════════════════════════════════════════════
    THE RESIDENCE — PINNED STAGE
    ═══════════════════════════════════════════════════════════════════════ */
-#stageWrap{position:relative;height:470vh}
+#stageWrap{position:relative;height:560vh}
 
 #stage{
   position:sticky;top:0;
@@ -315,7 +315,7 @@ footer a:hover{color:var(--ink)}
   .menu-btn{display:block}
   .rail-nav{display:none}
 
-  #stageWrap{height:400vh}
+  #stageWrap{height:480vh}
 
   .cap--left,.cap--right{
     left:var(--pad-x);right:var(--pad-x);width:auto;

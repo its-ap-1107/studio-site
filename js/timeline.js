@@ -47,13 +47,11 @@
      ═══════════════════════════════════════════════════════════════════════ */
   const PHASES = [
     { at: 0.000, label: 'Complete residence' },
-    { at: 0.140, label: 'Architectural reveal' },
-    { at: 0.300, label: 'Layer separation' },
-    { at: 0.640, label: 'Exploded composition' },
-    { at: 0.700, label: 'Material & detail' },
-    { at: 0.790, label: 'Spatial reveal' },
-    { at: 0.860, label: 'Recomposition' },
-    { at: 0.970, label: 'Complete residence' }
+    { at: 0.070, label: 'Layer separation' },
+    { at: 0.479, label: 'Exploded composition' },
+    { at: 0.520, label: 'Material & detail' },
+    { at: 0.620, label: 'Recomposition' },
+    { at: 0.975, label: 'Complete residence' }
   ];
 
   function phaseAt(p) {
@@ -114,18 +112,33 @@
      coming apart the entire way down. Recomposition replays them in reverse,
      a little brisker, as the brief asks.
      ═══════════════════════════════════════════════════════════════════════ */
+  /* Out and back, symmetrically.
+
+     Every state is held on the way down AND on the way back — which is the
+     whole point. The earlier version gave the outward journey 50% of the page
+     and the return 14%, with no hold on any intermediate state, so the return
+     read as a jump straight from fully apart to complete. Now:
+
+       outward   5 dissolves of 0.065, 4 holds of 0.021   (0.070 → 0.479)
+       held      the exploded composition and its details  (0.479 → 0.620)
+       return    5 dissolves of 0.056, 4 holds of 0.019    (0.620 → 0.975)
+
+     so the building passes through 90 → 70 → 50 → 30 → 10 → 0 on the way back
+     at very nearly the speed it came apart.                                */
   const KEYS = [
-    [0.000, 'hero'],       [0.140, 'hero'],        /* complete, sunset      */
-    [0.230, 'detaching'],  [0.275, 'detaching'],   /* same camera, lifting  */
-    [0.350, 'separating'], [0.390, 'separating'],  /* into the studio       */
-    [0.455, 'apart'],      [0.490, 'apart'],
-    [0.550, 'opening'],    [0.580, 'opening'],
-    [0.640, 'exploded'],   [0.860, 'exploded'],    /* hold · detail · section */
-    [0.895, 'opening'],
-    [0.922, 'apart'],
-    [0.948, 'separating'],
-    [0.974, 'detaching'],
-    [1.000, 'hero']                                /* complete again        */
+    [0.000, 'hero'],       [0.070, 'hero'],        /* complete, sunset       */
+
+    [0.135, 'detaching'],  [0.156, 'detaching'],   /* same camera, lifting   */
+    [0.221, 'separating'], [0.242, 'separating'],  /* into the studio        */
+    [0.307, 'apart'],      [0.328, 'apart'],
+    [0.393, 'opening'],    [0.414, 'opening'],
+    [0.479, 'exploded'],   [0.620, 'exploded'],    /* held · detail passes   */
+
+    [0.676, 'opening'],    [0.695, 'opening'],     /* and back the same way  */
+    [0.751, 'apart'],      [0.769, 'apart'],
+    [0.826, 'separating'], [0.844, 'separating'],
+    [0.900, 'detaching'],  [0.919, 'detaching'],
+    [0.975, 'hero'],       [1.000, 'hero']         /* complete again         */
   ];
 
   function frameAt(p) {
