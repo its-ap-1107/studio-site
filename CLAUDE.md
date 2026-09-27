@@ -120,10 +120,27 @@ layered vertically.
 - **The counters are invented** (15+ years, 50+ projects, 2M+ sq ft, 1000+
   clients) and sit near a RERA disclosures link. Need verified figures.
 - Studio name, phone, email, address are placeholders.
-- Projects 02–04 are abstract SVG placeholders; only 01 is a real building.
-  Don't reuse the residence renders across all four — it's one building, and
-  presenting it as four projects would be a false claim.
+- ~~Projects 02–04 are abstract SVG placeholders~~ **Done on this branch.**
+  The Work section now carries seven real completed projects supplied by the
+  client. The SVG placeholders are gone. `main` still has them.
 - Footer legal links go nowhere.
+
+## The Work section
+
+Seven completed projects from the client, in `assets/work/`. Raw files are in
+`work/` and gitignored.
+
+The captions state only what is visible in each image — discipline, unit count,
+and the figures printed on the layout drawings (1,477 sq.mt open space;
+1,795 sq.mt amenity). **No locations, client names, dates or values have been
+invented.** Keep it that way: this section sits a short scroll from a RERA
+disclosures link.
+
+They come in every shape, 2.16:1 down to 0.56:1. Rather than crop them to a
+common card ratio — which would cut the plot numbers off the aerial layouts —
+every card is the **same height** and takes whatever width its image needs, so
+the row reads as a contact sheet and nothing is lost. On mobile the gallery is
+a vertical list, so cards go full width and images show whole.
 
 ## Deploying
 

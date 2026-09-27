@@ -17,3 +17,6 @@ desktop.ini
 
 # raw construction frames — working copies live in assets/build/
 assets_0_to_100/
+
+# raw client work photos — working copies live in assets/work/
+work/

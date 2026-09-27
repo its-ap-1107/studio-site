@@ -242,3 +242,51 @@
   .contact{grid-template-columns:1fr}
   .form{grid-template-columns:1fr}
 }
+
+
+/* ══════════════════════════════════════════════════════════════════════
+   WORK — a filmstrip of real, completed projects
+   ═══════════════════════════════════════════════════════════════════════
+   These come in every shape: a 2.16:1 elevation next to a 0.56:1 aerial
+   layout. Forcing them into one card ratio would crop the plot numbers off
+   the layouts, so instead every card is the SAME HEIGHT and takes whatever
+   width its image needs. The row reads as a contact sheet, and nothing is
+   cropped.
+   ═══════════════════════════════════════════════════════════════════════ */
+.work .gallery{align-items:flex-start}
+
+.work .project{flex:0 0 auto;max-width:92vw}
+
+.work .project .img{
+  display:block;position:relative;
+  height:clamp(230px,40vh,430px);
+  width:auto;aspect-ratio:auto;
+  background:#E4E0D7;
+}
+.work .project .img img{
+  position:static;
+  height:100%;width:auto;
+  max-width:none;
+  object-fit:cover;
+}
+
+/* one column under the image, since the cards are no longer a fixed width */
+.work .project .meta{
+  display:block;
+  padding-top:18px;
+  max-width:46ch;
+}
+.work .project .meta .label{
+  display:block;padding-top:0;margin-bottom:10px;
+  font-variant-numeric:tabular-nums;
+}
+.work .project h3{font-size:clamp(18px,1.5vw,24px)}
+.work .project .where{margin-top:4px}
+
+@media (max-width:760px){
+  /* the gallery is a vertical list here, so the cards go full width and the
+     images show whole rather than being cropped to a common height */
+  .work .project{max-width:100%;width:100%}
+  .work .project .img{height:auto;width:100%}
+  .work .project .img img{width:100%;height:auto;object-fit:contain}
+}
