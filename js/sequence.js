@@ -46,21 +46,43 @@
      Only what the sequence actually shows. FRAMES may describe renders that
      are documented but not in KEYS; those are not fetched.
      ------------------------------------------------------------------- */
-  function loadAll() {
-    const used = Object.keys(TLx.FRAMES).filter(k => TLx.KEYS.some(e => e[1] === k));
-    return Promise.all(used.map(key => new Promise(resolve => {
+  function loadOne(key) {
+    return new Promise(resolve => {
+      if (SEQ.images[key]) return resolve();
       const rec = { ok: false, img: new Image() };
       SEQ.images[key] = rec;
       rec.img.decoding = 'async';
       rec.img.onload = () => {
-        /* decode before the first paint so the opening frame never pops */
         const done = () => { rec.ok = true; resolve(); };
         if (rec.img.decode) rec.img.decode().then(done, done);
         else done();
       };
       rec.img.onerror = () => resolve();
       rec.img.src = TLx.FRAMES[key].src;
-    })));
+    });
+  }
+
+  /* The opening frame gates the curtain; the other eleven stream in behind it,
+     in sequence order, so the ones needed soonest arrive first. Twelve frames
+     is about 2.6MB — far too much to hold a visitor behind a blank screen for,
+     and unnecessary, since drawFrame simply skips any frame not yet decoded
+     and the one before it stays on screen until it is. */
+  function loadAll() {
+    const used = [];
+    TLx.KEYS.forEach(e => { if (used.indexOf(e[1]) < 0) used.push(e[1]); });
+    if (!used.length) return Promise.resolve();
+
+    return loadOne(used[0]).then(() => {
+      let i = 1;
+      const next = () => {
+        if (i >= used.length) return;
+        loadOne(used[i++]).then(() => {
+          SEQ.last = '';           /* a newly arrived frame may change the draw */
+          next();
+        });
+      };
+      next();
+    });
   }
 
   /* ── sizing ───────────────────────────────────────────────────────────── */

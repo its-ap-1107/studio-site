@@ -92,9 +92,11 @@
     /* ── readout ─────────────────────────────────────────────────────── */
     const label = TLx.phaseAt(p);
     if (Scene.readoutPhase.textContent !== label) Scene.readoutPhase.textContent = label;
-    Scene.readoutFill.style.width = (p * 100).toFixed(1) + '%';
-    const pct = Math.round(p * 100);
-    const shown = pct < 10 ? '0' + pct : String(pct);
+    /* the bar and the number both track work complete, which the timeline
+       interpolates from the frames — never the raw scroll position */
+    const done = TLx.percent ? TLx.percent(p) : p * 100;
+    Scene.readoutFill.style.width = done.toFixed(1) + '%';
+    const shown = Math.round(done) + '% complete';
     if (Scene.readoutPct.textContent !== shown) Scene.readoutPct.textContent = shown;
 
     /* ── the stage rail follows the narrative, phase for phase ───────── */

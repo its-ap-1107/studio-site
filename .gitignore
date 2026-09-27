@@ -14,3 +14,6 @@ desktop.ini
 
 # logs
 *.log
+
+# raw construction frames — working copies live in assets/build/
+assets_0_to_100/

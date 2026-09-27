@@ -1,4 +1,11 @@
-# Studio site — working notes
+# Studio site — working notes  (branch: `hero-0-to-100`)
+
+**The hero is a 0-to-100 construction sequence.** Twelve frames of one project
+from bare ground to handover. Everything below the stage is unchanged from
+`main` — deliberately; changes there come later.
+
+`main` still carries the exploded-model hero. Don't merge the two stages
+together without deciding which one the site is for.
 
 One-page studio site for an architecture / development / plotting / real estate
 practice. Static: **no build step, no dependencies, no framework.** Open
@@ -26,54 +33,67 @@ re-points `--ink/--bg/--mute/--line` so components work on either ground.
 
 ## How the opening sequence works
 
-`#stageWrap` is 470vh with a sticky stage. Scroll maps to one value
-`p in [0,1]`; everything on screen is a pure function of `p`. Nothing
-autoplays, and scrolling up runs the whole thing backwards.
+`#stageWrap` is 560vh with a sticky stage. Scroll maps to one value
+`p in [0,1]`; everything on screen is a pure function of `p`. Scrolling up
+takes the building back down again.
 
-Six renders of one residence, ordered by how far it has come apart:
+Twelve frames, named for the work complete in each:
 
-| | Render | What it is |
-|---|---|---|
-| 01 | `01-hero` | sunset exterior, complete |
-| 02 | `02-detaching` | same camera and light, panels begin to lift away |
-| 03 | `03-separating` | dark studio, mildly apart |
-| 04 | `04-apart` | facade panels floating out |
-| 05 | `05-opening` | floor plates separate, interior exposed |
-| 06 | `06-exploded` | fully apart, structure and landscape ring separated |
+`build-000` bare site · `010` excavation and footings · `020` foundation walls
+· `030` podium slab, columns rising · `040` five floors · `050` eight floors ·
+`060` topped out · `070` cladding going on · `080` façade closed, jaali
+complete · `090` canopy and landscaping · `095` snagging · `100` handover.
 
-**03 to 06 share one camera and one lighting setup.** That is what makes the
-dissolves between them read as the building continuing to open rather than as
-one picture replacing another, and it is why this does not need the image cut
-into moving layers. The previous building's explosion was vertically layered,
-so band cuts worked; **this one throws parts outward in every direction, and
-horizontal cuts would shear it.** Don't reintroduce the band system here.
+### Why a cross-dissolve is right here
 
-The opening dissolves run 8–9% of the page each, so the building is visibly
-coming apart the whole way down. Recomposition replays the same renders in
-reverse, a little brisker, over the last 14%.
+It was wrong for the exploded sequence and right for this one, for a specific
+reason: **nothing moves between these frames.** The camera is locked — same
+road, same hedge, same flanking trees throughout — and what changes is material
+being *added*. A dissolve between eight floors and ten floors reads as two
+more floors appearing, which is what happened. There is nothing to ghost
+because nothing travelled.
 
-`01` and `02` are 3:2; the four studio renders were padded to **2:1** by
-clamping their edge columns outward, so a wide stage crops almost nothing off
-the exploded model. Below a 1.45 viewport aspect the stage fits the render
-instead of cropping and extends the backdrop using each render's sampled
-`top`/`bottom` edge colours, so nothing is ever cut off the sides.
+Eleven dissolves of 0.065 with holds of 0.018 between them; the building is
+visibly growing across 72% of the stage. Work complete rises monotonically,
+largest single step 0.12%.
+
+### The readout
+
+`TL.percent(p)` interpolates work complete **from the frames**, not from the
+scroll position, so it never claims progress the image is not showing. The bar
+and the number both track it.
+
+### Framing and loading
+
+Frames are ~2.33:1, with the black letterbox strip the generator left on
+trimmed off. A wide stage crops the sides, costing a sliver of the end bays;
+the building is centred, so this is safe. **Don't try to pad them to 16:9** —
+extending the sky upward was tried and produced banding and a hard seam.
+
+The opening frame gates the curtain and the other eleven stream in behind it
+in sequence order. Twelve frames is ~2.6MB, far too much to hold a visitor
+behind a blank screen for, and unnecessary: `drawFrame` skips any frame not
+yet decoded and the previous one stays up until it arrives.
 
 ## Where the numbers live — all in `js/timeline.js`
 
 | Knob | What it controls |
 |---|---|
-| `KEYS` | which render is on screen at which scroll position; two entries sharing a source are a hold, two different ones cross-dissolve across the whole span |
-| `FRAMES` `k` | per-render scale trim — keep at or above `1.00` |
-| `FRAMES` `u,v` | where the building sits in that render (0–1) |
-| `FRAMES` `top,bottom` | edge colours for the narrow-screen backdrop |
-| `Camera.zoom` | scale above the fit |
-| `Camera.tu/tv` | the point held at centre — including the four close-ups, read off `06-exploded.jpg` |
-| `PHASES` | the eight labels and their boundaries |
-| `studio` | how far into the dark studio the grade has gone |
+| `FRAMES` `pct` | work complete in that frame; drives the readout |
+| `KEYS` | which frame is on screen when; two entries sharing a source are a hold |
+| `Camera.zoom` | tight on the bare site, pulling back as the building gains height |
+| `Camera.tv` | the point held at centre, lifting from the ground to the middle |
+| `PHASES` | the six milestone labels |
 
-Caption windows live in `index.html` as `data-in` / `data-out`, and the stage
-rail's stops are `data-goto` on its buttons. All three sets have to move
-together when the timing changes.
+Caption windows are `data-in`/`data-out` in `index.html`; the rail stops are
+`data-goto`. Both move with `PHASES`.
+
+### Assets
+
+`assets_0_to_100/` holds the raw PNGs and is gitignored; `assets/build/` holds
+the working copies. Ten files under `assets/` are inherited from `main`'s hero
+and unused here — left in place deliberately, since the rest of the site is
+meant to stay identical to `main`.
 
 ## Known issue — not yet fixed
 
