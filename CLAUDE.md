@@ -1,11 +1,12 @@
-# Studio site — working notes  (branch: `hero-0-to-100`)
+# Studio site — working notes  (branch: `hero-video`)
 
-**The hero is a 0-to-100 construction sequence.** Twelve frames of one project
-from bare ground to handover. Everything below the stage is unchanged from
-`main` — deliberately; changes there come later.
+**The hero is a video clip that plays on its own clock.** A slow dolly from
+the full elevation in to the entrance lobby, 7s, looping. Everything below the
+hero is inherited from `hero-0-to-100`, including the real Work section.
 
-`main` still carries the exploded-model hero. Don't merge the two stages
-together without deciding which one the site is for.
+Branched from `hero-0-to-100`. `main` carries the exploded-model hero;
+`hero-0-to-100` the 12-frame construction sequence. Three heroes, one site —
+pick one before merging anything.
 
 One-page studio site for an architecture / development / plotting / real estate
 practice. Static: **no build step, no dependencies, no framework.** Open
@@ -31,49 +32,58 @@ Page order: **residence stage (dark) → what we do → projects → about →
 numbers + CTA (dark) → contact (light)**. Palette is light; `.on-dark`
 re-points `--ink/--bg/--mute/--line` so components work on either ground.
 
-## How the opening sequence works
+## How the hero works
 
-`#stageWrap` is 560vh with a sticky stage. Scroll maps to one value
-`p in [0,1]`; everything on screen is a pure function of `p`. Scrolling up
-takes the building back down again.
+`#stageWrap` is 220vh with a sticky stage. The clip **autoplays, muted, and
+loops**; it is *not* scrubbed by scroll. Scroll has one job here: crossing the
+copy over the top of it.
 
-Twelve frames, named for the work complete in each:
+### Why not scroll-scrubbed
 
-`build-000` bare site · `010` excavation and footings · `020` foundation walls
-· `030` podium slab, columns rising · `040` five floors · `050` eight floors ·
-`060` topped out · `070` cladding going on · `080` façade closed, jaali
-complete · `090` canopy and landscaping · `095` snagging · `100` handover.
+Two reasons, and the first is the one that matters:
 
-### Why a cross-dissolve is right here
+1. **It is a directed camera move.** The dolly-in was composed with a pace.
+   Handing that pace to the scroll wheel throws away the thing that makes it
+   good.
+2. **Scrubbing compressed video is unreliable.** Seeking only lands cheaply on
+   keyframes; between them the decoder has to run forward from the last one.
+   On Safari and most phones this stutters visibly. It is exactly why Apple
+   uses image sequences, not video, for scroll-driven heroes — and why
+   `hero-0-to-100` exists as the scroll-driven option.
 
-It was wrong for the exploded sequence and right for this one, for a specific
-reason: **nothing moves between these frames.** The camera is locked — same
-road, same hedge, same flanking trees throughout — and what changes is material
-being *added*. A dissolve between eight floors and ten floors reads as two
-more floors appearing, which is what happened. There is nothing to ghost
-because nothing travelled.
+The two techniques are complementary, not competing. If you want scroll
+control, use that branch; this one is for a clip that plays itself.
 
-Eleven dissolves of 0.065 with holds of 0.018 between them; the building is
-visibly growing across 72% of the stage. Work complete rises monotonically,
-largest single step 0.12%.
+### The loop seam
 
-### The readout
+The clip ends deep in the lobby and restarts on the wide elevation, so the wrap
+is a hard cut. `js/video.js` dips opacity over the last and first 0.45s, which
+reads as a breath rather than a jump. Change `DIP` there to taste.
 
-`TL.percent(p)` interpolates work complete **from the frames**, not from the
-scroll position, so it never claims progress the image is not showing. The bar
-and the number both track it.
+### The pause control
 
-### Framing and loading
+Auto-playing motion that runs over five seconds needs a way to stop it, and
+this loops indefinitely, so **it is not optional** — don't remove it. It also
+doubles as the Play control when a browser refuses autoplay, which some do
+until the visitor interacts.
 
-Frames are ~2.33:1, with the black letterbox strip the generator left on
-trimmed off. A wide stage crops the sides, costing a sliver of the end bays;
-the building is centred, so this is safe. **Don't try to pad them to 16:9** —
-extending the sky upward was tried and produced banding and a hard seam.
+The clip is paused while off screen, and never autoplays under
+`prefers-reduced-motion` — the poster stands in and the control offers Play.
 
-The opening frame gates the curtain and the other eleven stream in behind it
-in sequence order. Twelve frames is ~2.6MB, far too much to hold a visitor
-behind a blank screen for, and unnecessary: `drawFrame` skips any frame not
-yet decoded and the previous one stays up until it arrives.
+### Files
+
+`assets/video/hero.mp4` 1.5MB · `hero-alt.mp4` 1.2MB is a second take, not
+referenced; swap the `<source>` to try it. `hero-poster.jpg` carries the first
+paint so the stage is never blank.
+
+Source clips were 13.8MB and 10.4MB for seven seconds — around 16 Mbps, which
+is unusable on mobile data. They were re-encoded with VLC's CLI
+(`--sout "#transcode{vcodec=h264,vb=1500,...}"`), which is the only encoder on
+this machine; there is no ffmpeg. VLC's `scene` filter only works inside a
+transcode pipeline, not with `--vout=dummy`, if you ever need frames again.
+
+`js/sequence.js` and the frame assets from the other heroes are removed on
+this branch — they belong to the branches that use them.
 
 ## Where the numbers live — all in `js/timeline.js`
 
@@ -117,6 +127,9 @@ layered vertically.
 
 - **The enquiry form does not send anything.** `js/site.js` validates and
   shows a thank-you; nothing is transmitted. Needs an endpoint.
+- **The hero clip carries a "KlingAI 3.0" watermark**, bottom right,
+  throughout. It cannot ship like that. Re-render without it, crop it out
+  (it costs ~8% of the height), or cover it.
 - **The counters are invented** (15+ years, 50+ projects, 2M+ sq ft, 1000+
   clients) and sit near a RERA disclosures link. Need verified figures.
 - Studio name, phone, email, address are placeholders.

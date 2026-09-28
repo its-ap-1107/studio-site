@@ -42,7 +42,7 @@
       settled = false;
     }
 
-    window.SEQUENCE.draw(current);
+    if (window.SEQUENCE) window.SEQUENCE.draw(current);
     window.SCENE.render(current);
 
     if (!settled) requestAnimationFrame(frame);
@@ -59,7 +59,7 @@
     nav.classList.toggle('scrolled', (window.scrollY || window.pageYOffset) > 40);
 
     hint.style.opacity = target > 0.025 ? '0' : '1';
-    readout.classList.toggle('on', target > 0.004 && target < 0.998);
+    if (readout) readout.classList.toggle('on', target > 0.004 && target < 0.998);
 
     kick();
   }
@@ -145,7 +145,7 @@
     /* the curtain lifts only once every render has decoded, so the opening
        frame is already on the canvas — no flash of an empty stage          */
     window.SEQUENCE.init().then(() => {
-      window.SEQUENCE.draw(current);
+      if (window.SEQUENCE) window.SEQUENCE.draw(current);
       requestAnimationFrame(() => document.body.classList.add('ready'));
     });
 

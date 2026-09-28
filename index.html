@@ -41,83 +41,42 @@
 
 <main id="top">
 
-<!-- ═══════════════════ 1. THE RESIDENCE — PINNED STAGE ═══════════════════ -->
-<section id="stageWrap" aria-label="One project from bare ground to handover">
+<!-- ═══════════════════ 1. THE RESIDENCE — VIDEO HERO ═══════════════════ -->
+<section id="stageWrap" aria-label="The completed residence">
   <div id="stage" class="on-dark">
 
-    <canvas id="sequence" aria-hidden="true"></canvas>
-    <p class="visually-hidden">
-      A scroll-controlled sequence of one project under construction, from bare
-      ground through foundation, structure and façade to handover.
-    </p>
+    <video id="heroVideo" class="hero-video"
+           poster="assets/video/hero-poster.jpg"
+           muted loop playsinline preload="auto"
+           aria-label="A slow approach to the completed residence, from the full elevation in to the entrance lobby">
+      <source src="assets/video/hero.mp4" type="video/mp4">
+    </video>
 
-    <div class="studio-key" aria-hidden="true"></div>
     <div class="dof" aria-hidden="true"></div>
     <div class="vignette" aria-hidden="true"></div>
 
-    <!-- ───────────── scroll-synchronised typography ───────────── -->
     <div id="captions">
-
-      <article class="cap cap--hero" data-in="0.00" data-out="0.048">
+      <article class="cap cap--hero" data-in="0.00" data-out="0.420">
         <span class="label">Architecture · Development · Plotting · Real Estate</span>
-        <h1 class="h-display"><span>From open ground</span><span>to handover.</span></h1>
-        <p class="lede">One project in full view — every stage, from the first
-          excavator to the last plant.</p>
+        <h1 class="h-display"><span>Every address</span><span>begins with</span><span>an idea.</span></h1>
+        <p class="lede">From the first drawing to the day the lights go on.</p>
       </article>
 
-      <article class="cap cap--left" data-in="0.105" data-out="0.250">
-        <div class="step label"><b>01</b><em></em>04</div>
-        <h2>It starts below<br>the ground.</h2>
-        <p>Excavation, footings and the raft. The part nobody sees, and the
-          part everything else stands on.</p>
-      </article>
-
-      <article class="cap cap--right" data-in="0.330" data-out="0.560">
-        <div class="step label"><b>02</b><em></em>04</div>
-        <h2>Floor<br>by floor.</h2>
-        <p>Columns, slabs and shear walls rising storey after storey until the
-          frame tops out.</p>
-      </article>
-
-      <article class="cap cap--left" data-in="0.620" data-out="0.760">
-        <div class="step label"><b>03</b><em></em>04</div>
-        <h2>Closing<br>it in.</h2>
-        <p>Cladding, glazing and the jaali screen. It stops being a frame and
-          starts being a place.</p>
-      </article>
-
-      <article class="cap cap--right" data-in="0.790" data-out="0.905">
-        <div class="step label"><b>04</b><em></em>04</div>
-        <h2>The last<br>ten percent.</h2>
-        <p>Entrance canopy, landscaping, lighting, snagging — the longest short
-          stretch of any project.</p>
-      </article>
-
-      <article class="cap cap--hero cap--final" data-in="0.955" data-out="1.001">
-        <h2 class="h-display"><span>Handed over.</span></h2>
+      <article class="cap cap--hero cap--final" data-in="0.520" data-out="1.001">
+        <h2 class="h-display"><span>Built to be</span><span class="soft">walked into.</span></h2>
         <div class="cta-actions">
-          <a href="#what-we-do" class="btn btn-solid down">How we work <span class="arr">↓</span></a>
+          <a href="#work" class="btn btn-solid down">See our work <span class="arr">↓</span></a>
           <a href="#contact" class="btn btn-ghost">Book a site visit</a>
         </div>
       </article>
     </div>
 
-    <nav class="rail-nav" id="railNav" aria-label="Construction stages">
-      <button data-goto="0.02"><span>Site</span><i></i></button>
-      <button data-goto="0.140"><span>Foundation</span><i></i></button>
-      <button data-goto="0.390"><span>Structure</span><i></i></button>
-      <button data-goto="0.630"><span>Façade</span><i></i></button>
-      <button data-goto="0.800"><span>Finishing</span><i></i></button>
-      <button data-goto="0.970"><span>Complete</span><i></i></button>
-    </nav>
+    <button id="videoToggle" class="video-toggle" type="button" aria-label="Pause the background video">
+      <span class="video-toggle-icon" aria-hidden="true"></span>
+      <span class="video-toggle-text">Pause</span>
+    </button>
 
-    <div id="readout" aria-hidden="true">
-      <span id="readoutPhase">Site</span>
-      <span id="readoutTrack"><i id="readoutFill"></i></span>
-      <span id="readoutPct">0% complete</span>
-    </div>
-
-    <div class="scroll-cue label" id="scrollHint">Scroll to explore ↓<i></i></div>
+    <div class="scroll-cue label" id="scrollHint">Scroll <i></i></div>
   </div>
 </section>
 
@@ -341,8 +300,8 @@
 
 <script src="js/timeline.js"></script>
 <script src="js/scene.js"></script>
-<script src="js/sequence.js"></script>
 <script src="js/main.js"></script>
+<script src="js/video.js"></script>
 <script src="js/site.js"></script>
 </body>
 </html>

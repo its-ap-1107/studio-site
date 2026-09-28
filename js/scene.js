@@ -89,15 +89,15 @@
         : `${c.base}translate3d(0, ${((1 - o) * 16).toFixed(1)}px, 0)`;
     }
 
-    /* ── readout ─────────────────────────────────────────────────────── */
-    const label = TLx.phaseAt(p);
-    if (Scene.readoutPhase.textContent !== label) Scene.readoutPhase.textContent = label;
-    /* the bar and the number both track work complete, which the timeline
-       interpolates from the frames — never the raw scroll position */
-    const done = TLx.percent ? TLx.percent(p) : p * 100;
-    Scene.readoutFill.style.width = done.toFixed(1) + '%';
-    const shown = Math.round(done) + '% complete';
-    if (Scene.readoutPct.textContent !== shown) Scene.readoutPct.textContent = shown;
+    /* ── readout — absent on the video hero, which has no phases ─────── */
+    if (Scene.readoutPhase) {
+      const label = TLx.phaseAt(p);
+      if (Scene.readoutPhase.textContent !== label) Scene.readoutPhase.textContent = label;
+      const done = TLx.percent ? TLx.percent(p) : p * 100;
+      Scene.readoutFill.style.width = done.toFixed(1) + '%';
+      const shown = Math.round(done) + '% complete';
+      if (Scene.readoutPct.textContent !== shown) Scene.readoutPct.textContent = shown;
+    }
 
     /* ── the stage rail follows the narrative, phase for phase ───────── */
     let active = 0;
