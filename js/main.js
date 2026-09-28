@@ -142,12 +142,17 @@
     window.SCENE.render(current);
     onScroll();
 
-    /* the curtain lifts only once every render has decoded, so the opening
-       frame is already on the canvas — no flash of an empty stage          */
-    window.SEQUENCE.init().then(() => {
-      if (window.SEQUENCE) window.SEQUENCE.draw(current);
+    /* The curtain lifts once the stage has something to show. With a canvas
+       sequence that means every frame decoded; with the video hero there is no
+       SEQUENCE at all and the poster is already there, so it lifts at once. */
+    if (window.SEQUENCE) {
+      window.SEQUENCE.init().then(() => {
+        window.SEQUENCE.draw(current);
+        requestAnimationFrame(() => document.body.classList.add('ready'));
+      });
+    } else {
       requestAnimationFrame(() => document.body.classList.add('ready'));
-    });
+    }
 
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', () => { target = readTarget(); kick(); }, { passive: true });
