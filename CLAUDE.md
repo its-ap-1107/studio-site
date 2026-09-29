@@ -76,6 +76,15 @@ The clip is paused while off screen, and never autoplays under
 referenced; swap the `<source>` to try it. `hero-poster.jpg` carries the first
 paint so the stage is never blank.
 
+**Both clips are cropped 151px off each side** (`croppadd{cropleft=151,
+cropright=151}` in the VLC transcode), which removes the "KlingAI 3.0"
+watermark that sat at x 1303–1420, y 593–618 of the 1440x640 source. The crop
+is symmetric, so the composition stays centred, and it lands the file on
+1136x640 — essentially 16:9, so a standard stage barely crops it. That is why
+the framing now shows *more* of the building than the uncropped 2.25:1 file
+did. Always re-encode from the originals in Downloads, not from these, to
+avoid stacking compression.
+
 Source clips were 13.8MB and 10.4MB for seven seconds — around 16 Mbps, which
 is unusable on mobile data. They were re-encoded with VLC's CLI
 (`--sout "#transcode{vcodec=h264,vb=1500,...}"`), which is the only encoder on
@@ -127,9 +136,6 @@ layered vertically.
 
 - **The enquiry form does not send anything.** `js/site.js` validates and
   shows a thank-you; nothing is transmitted. Needs an endpoint.
-- **The hero clip carries a "KlingAI 3.0" watermark**, bottom right,
-  throughout. It cannot ship like that. Re-render without it, crop it out
-  (it costs ~8% of the height), or cover it.
 - **The counters are invented** (15+ years, 50+ projects, 2M+ sq ft, 1000+
   clients) and sit near a RERA disclosures link. Need verified figures.
 - Studio name, phone, email, address are placeholders.
