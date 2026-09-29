@@ -1,6 +1,6 @@
 # Source images. assets/ holds the web copies that actually ship;
 # uploads/ is the untouched originals — keep them locally, out of the repo.
-uploads/
+/uploads/
 
 # editors
 .idea/
@@ -16,7 +16,9 @@ desktop.ini
 *.log
 
 # raw construction frames — working copies live in assets/build/
-assets_0_to_100/
+# leading slash matters: an unanchored pattern matches at ANY depth, so a bare
+# `work/` also swallows assets/work/
+/assets_0_to_100/
 
 # raw client work photos — working copies live in assets/work/
-work/
+/work/
